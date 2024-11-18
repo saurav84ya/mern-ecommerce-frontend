@@ -49,7 +49,7 @@ export const logoutUser = createAsyncThunk(
         withCredentials: true,
       }
     );
-
+    console.log(response.data)
     return response.data;
   }
 );
