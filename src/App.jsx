@@ -18,6 +18,9 @@ import CheckAuth from './components/common/check-auth'
 import UnAuthPage from './components/UnAuthPage'
 import { useDispatch, useSelector } from 'react-redux'
 import { checkAuth } from './store/auth-slice'
+import AllUploadedProducts from './pages/admin-view/AllUploadedProducts'
+import { AlarmCheck } from 'lucide-react'
+import AllRegisterUsers from './pages/admin-view/AllRegisterUsers'
 
 
 
@@ -48,7 +51,8 @@ export default function App() {
 
         <Route path='/admin' element={<CheckAuth isAuthenticated={isAuthenticated} user={user} ><AdminLayout/></CheckAuth>} >
             <Route path='dashboard' element={<AdminDashboard/>} />
-            <Route path='products' element={<AdminProducts/>} />
+            <Route path='products' element={<AllUploadedProducts/>} />
+            <Route path='users' element={<AllRegisterUsers/>} />
             <Route path='orders' element={<AdminOrders/>} />
             <Route path='features' element={<AdminFeatures/>} />
         </Route>

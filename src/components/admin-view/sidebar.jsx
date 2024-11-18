@@ -21,6 +21,11 @@ const adminSidebarMenuItems = [
     label: "Orders",
     path: "/admin/orders",
     icon: <i className="ri-briefcase-2-line"></i>
+  },{
+    id: "users",
+    label: "users",
+    path: "/admin/users",
+    icon: <i className="ri-group-fill"></i>
   },
 ];
 
