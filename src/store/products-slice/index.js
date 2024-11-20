@@ -1,67 +1,37 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+// Initial state
 const initialState = {
   isLoading: false,
   productList: [],
+  error: null,
 };
 
-export const addNewProduct = createAsyncThunk(
-  "/products/addnewproduct",
-  async (formData) => {
-    const result = await axios.post(
-      `${import.meta.env.VITE_API_URL_SERVER}api/admin/products/addProduct`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    return result?.data;
-  }
-);
-
+// Async thunk for fetching all products
 export const fetchAllProducts = createAsyncThunk(
-  "/products/fetchAllProducts",
-  async () => {
-    const result = await axios.get(
-      "http://localhost:5000/api/admin/products/get"
-    );
+  "adminProducts/fetchAllProducts",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL_SERVER}api/admin/products/fetchAllProducts`
+      );
 
-    return result?.data;
-  }
-);
+      const data = response.data.data;
 
-export const editProduct = createAsyncThunk(
-  "/products/editProduct",
-  async ({ id, formData }) => {
-    const result = await axios.put(
-      `http://localhost:5000/api/admin/products/edit/${id}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      if (Array.isArray(data)) {
+        return { data };
+      } else {
+        throw new Error("Unexpected response format.");
       }
-    );
-
-    return result?.data;
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return rejectWithValue(error.response?.data?.message || "Unable to fetch products.");
+    }
   }
 );
 
-export const deleteProduct = createAsyncThunk(
-  "/products/deleteProduct",
-  async (id) => {
-    const result = await axios.delete(
-      `http://localhost:5000/api/admin/products/delete/${id}`
-    );
-
-    return result?.data;
-  }
-);
-
+// AdminProducts slice
 const AdminProductsSlice = createSlice({
   name: "adminProducts",
   initialState,
@@ -70,14 +40,17 @@ const AdminProductsSlice = createSlice({
     builder
       .addCase(fetchAllProducts.pending, (state) => {
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(fetchAllProducts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.productList = action.payload.data;
+        state.error = null;
       })
       .addCase(fetchAllProducts.rejected, (state, action) => {
         state.isLoading = false;
         state.productList = [];
+        state.error = action.payload || "Failed to fetch products.";
       });
   },
 });
