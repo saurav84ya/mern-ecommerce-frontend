@@ -3,7 +3,7 @@ import axios from "axios";
 
 const initialState = {
   isAuthenticated: false,
-  isLoading: true,
+  isLoading: false,
   user: null,
 };
 
@@ -39,20 +39,18 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const logoutUser = createAsyncThunk(
-  "/auth/logout",
+export const logoutUser = createAsyncThunk("/auth/logout", async () => {
+  const response = await axios.post(
+    `${import.meta.env.VITE_API_URL_SERVER}api/auth/logout`,
+    {}, // Empty body
+    {
+      withCredentials: true, // Include credentials for cross-origin
+    }
+  );
+  console.log(response.data);
+  return response.data;
+});
 
-  async () => {
-    const response = await axios.post(      
-      `${import.meta.env.VITE_API_URL_SERVER}api/auth/logout`,
-      {
-        withCredentials: true,
-      }
-    );
-    console.log(response.data)
-    return response.data;
-  }
-);
 
 export const checkAuth = createAsyncThunk("/auth/checkauth",
 

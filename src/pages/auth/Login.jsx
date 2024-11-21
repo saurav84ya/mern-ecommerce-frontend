@@ -3,7 +3,7 @@ import { loginFormControls } from '../../config/index'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { registerUser ,loginUser } from '../../store/auth-slice/index'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useToast } from '@/hooks/use-toast'
 
 
@@ -11,8 +11,14 @@ import { useToast } from '@/hooks/use-toast'
 const initialState = {
   email : "",
   password : ""
-}
+}//
 export default function Login() {
+ 
+
+  if(isLoading){
+    console.log("true")
+  }
+
   const {toast} = useToast()
 
   const [formData ,setFormData] = useState(initialState)
