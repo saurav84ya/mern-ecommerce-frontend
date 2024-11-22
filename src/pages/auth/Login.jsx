@@ -15,9 +15,6 @@ const initialState = {
 export default function Login() {
  
 
-  if(isLoading){
-    console.log("true")
-  }
 
   const {toast} = useToast()
 

@@ -6,11 +6,11 @@ import { Separator } from '../ui/separator'
 
 export default function ProductFilter({handleFilter , filter}) {
   return (
-    <div className='bg-background rounded-lg  shadow-sm'>
-      <div className='p-4 border-b'>
+    <div className='bg-background rounded-lg flex  sm:flex-col    shadow-sm'>
+      <div className='p-4 border-b '>
         <h2 className='text-lg font-extrabold'>Filters</h2>  
       </div>      
-      <div className='p-4 space-y-4'>
+      <div className='p-4 space-y-4 ' >
         {
             Object.keys(filterOptions).map((i) => (
               <Fragment key={i} >
@@ -22,7 +22,7 @@ export default function ProductFilter({handleFilter , filter}) {
                         <Checkbox onCheckedChange={()=> handleFilter(i , j.id)}  /> 
                         {j.label}
                       </Label> )
-                    }
+                    } 
                   </div>
                 </div>
                 <Separator/>

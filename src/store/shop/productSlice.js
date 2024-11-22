@@ -10,11 +10,18 @@ const initialState = {
 
 export const fetchAllFilteredProducts = createAsyncThunk(
     "products/fetchAllProducts",
-    async () => {
+    async ({query,sort}) => {
+      try {
+          const queryString = `?${query}&sort=${sort}`
+          console.log(queryString)
+
         const result = await axios.get(
-            `${import.meta.env.VITE_API_URL_SERVER}api/user/products/get`
+            `${import.meta.env.VITE_API_URL_SERVER}api/user/products/get${queryString}`
         )
         return result?.data;
+      } catch (error) {
+        console.log(error)
+      }
     }
 )
 

@@ -25,7 +25,7 @@ const createSearchParamsHelper = (filterParams) => {
 
 export default function ShopingListing() {
   const dispatch = useDispatch();
-  const { productList } = useSelector(state => state.shopProducts);
+  const { productList } = useSelector(state => state.shoppingProducts);
   
   const [filter, setFilters] = useState({});
   const [sort, setSort] = useState(null);
@@ -47,13 +47,17 @@ export default function ShopingListing() {
   // Fetch products based on filters and sort
   useEffect(() => {
     const queryParams = createSearchParamsHelper(filter);
-    dispatch(fetchAllFilteredProducts({ query: queryParams, sort }));
+  // console.log(queryParams)
+
+    dispatch(fetchAllFilteredProducts({ query: queryParams, sort : sort }));
+  
   }, [filter, sort, dispatch]); // Include `filter`, `sort`, and `dispatch` dependencies
 
   // Handle sorting
   const handleSort = (value) => {
     setSort(value);
   };
+  // console.log(sort)
 
   // Handle filter changes
   function handleFilter(getSectionId, getCurrentOption) {
