@@ -3,12 +3,13 @@ import ShopingProductTile from '@/components/shoping-view/ShopingProductTile'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { filterOptions, sortOptions } from '@/config'
-import { fetchAllFilteredProducts } from '@/store/shop/productSlice'
+import { fetchAllFilteredProducts, fetchProductDetails } from '@/store/shop/productSlice'
 import { DropdownMenuRadioItem } from '@radix-ui/react-dropdown-menu'
 import { ArrowUpDown } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
+import ProductDetailDialog from './ProductDetailDialog'
 
 // Helper function to create query string from filter params
 const createSearchParamsHelper = (filterParams) => {
@@ -25,12 +26,19 @@ const createSearchParamsHelper = (filterParams) => {
 
 export default function ShopingListing() {
   const dispatch = useDispatch();
-  const { productList } = useSelector(state => state.shoppingProducts);
+  const { productList ,productDetails} = useSelector(state => state.shoppingProducts);
   
   const [filter, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
+
+  const handleGetProductDetails = (getCurrentProduct)=>{
+    // console.log(getCurrentProduct)
+    dispatch(fetchProductDetails(getCurrentProduct))
+  }
+
+  
   // Set initial filter values from sessionStorage
   useEffect(() => {
     setFilters(JSON.parse(sessionStorage.getItem("filter")) || {});
@@ -82,6 +90,12 @@ export default function ShopingListing() {
     });
   }
 
+  const [openDetailDialog , setOpenDetailDialog] = useState(false);
+
+  useEffect(()=>{
+    if(productDetails !== null) setOpenDetailDialog(true)
+  } , [productDetails])
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-4 md:p-6">
       <ProductFilter filter={filter} handleFilter={handleFilter} />
@@ -112,11 +126,12 @@ export default function ShopingListing() {
           </div>
           <div className="flex flex-wrap justify-center">
             {productList && productList.length > 0
-              ? productList.map((p, i) => <ShopingProductTile key={i} product={p} />)
+              ? productList.map((p, i) => <ShopingProductTile key={i} handleGetProductDetails={handleGetProductDetails} product={p} />)
               : null}
           </div>
         </div>
       </div>
+      <ProductDetailDialog open={openDetailDialog} setOpen={setOpenDetailDialog} productDetails={productDetails} />
     </div>
   );
 }

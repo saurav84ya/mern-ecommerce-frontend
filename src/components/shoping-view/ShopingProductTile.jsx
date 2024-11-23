@@ -4,12 +4,12 @@ import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import { brandOptionsMap, categoryOptionsMap } from '@/config'
 
-export default function ShopingProductTile({product}) {
+export default function ShopingProductTile({product,handleGetProductDetails}) {
     // console.log(product.image)
   return (
     <div className='w-auto'>
-        <Card className="w-[400px] m-4  ">
-        <div>
+        <Card className="w-[400px] m-4   ">
+        <div onClick={()=>handleGetProductDetails(product?._id)} >
             <div className='relative'>
                 <img src={product?.image} alt={product?.title} className='w-full h-[300px] object-cover rounded-t-lg' />
                 {
