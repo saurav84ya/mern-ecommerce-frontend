@@ -5,9 +5,13 @@ import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { StarIcon } from 'lucide-react'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-export default function ProductDetailDialog({open , setOpen , productDetails}) {
-  // console.log(open , setOpen , productDetails)
+export default function ProductDetailDialog({open , setOpen , productDetails , handleAddCart}) {
+  const {user} = useSelector(state => state.auth)
+
+  console.log("productDetails" , productDetails?._id)
+
   return (
     <div className='w-auto h-screen  '>
 
@@ -40,13 +44,13 @@ export default function ProductDetailDialog({open , setOpen , productDetails}) {
                     <span className='text-muted-foreground' >(4.5)</span>
           </div>
           <div className='mt-5 mb-5 '>
-              <Button className="w-full">Add to cart</Button>
+              <Button onClick={()=> handleAddCart(productDetails?._id)} className="w-full">Add to cart</Button>
           </div>
           <Separator/>
-          <div className='max-w-[300px] overflow-auto '>
-            <h2 className='text-xl font-bold mb-4'>Reviews</h2>
-            <div className='grid gap-6'>
-              <div className='flex gap-4'>
+          <div className=' overflow-auto '>
+            <h2 className='text-xl font-bold mb-4 w-full'>Reviews</h2>
+            <div className='grid gap-6 overflow-y-auto w-full max-h-64'>
+              <div className='flex gap-4 w-full'>
                 <Avatar className="w-10 h-10 border" >
                   <AvatarFallback>SM</AvatarFallback>
                 </Avatar>
@@ -82,24 +86,7 @@ export default function ProductDetailDialog({open , setOpen , productDetails}) {
                   <p className='text-muted-foreground' >This is an awesome product</p>
                 </div>
               </div>
-              <div className='flex gap-4'>
-                <Avatar className="w-10 h-10 border" >
-                  <AvatarFallback>SM</AvatarFallback>
-                </Avatar>
-                <div className='grid gap-1'>
-                  <div className='flex items-center gap-2' >
-                    <h3 className='font-bold'>Saurav kumar</h3>
-                  </div>
-                  <div className='flex items-center gap-0.5'>
-                    <StarIcon className='w-5 h-5 fill-primary' />
-                    <StarIcon className='w-5 h-5 fill-primary' />
-                    <StarIcon className='w-5 h-5 fill-primary' />
-                    <StarIcon className='w-5 h-5 fill-primary' />
-                    <StarIcon className='w-5 h-5 fill-primary' />
-                  </div>
-                  <p className='text-muted-foreground' >This is an awesome product</p>
-                </div>
-              </div>
+             
               <div className='flex gap-4'>
                 <Avatar className="w-10 h-10 border" >
                   <AvatarFallback>SM</AvatarFallback>
@@ -126,7 +113,7 @@ export default function ProductDetailDialog({open , setOpen , productDetails}) {
           </div>
         </div>
       </DialogContent>
- 
+
     </Dialog>
       </div>
             

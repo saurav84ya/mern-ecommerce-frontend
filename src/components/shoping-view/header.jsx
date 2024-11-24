@@ -1,5 +1,5 @@
 import { House, LogOut, Menu, ShoppingCart, User } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 import { Button } from '../ui/button'
@@ -11,6 +11,8 @@ import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from '..
 import { DialogTitle } from '@radix-ui/react-dialog'; // Import DialogTitle
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'; // 
 import { logoutUser } from '@/store/auth-slice'
+import CartWrapper from './CartWrapper'
+import { fetchCartItems } from '@/store/cart-slice'
 
 function MenuItems (){
   return <div className=' flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row '>
@@ -22,21 +24,32 @@ function MenuItems (){
 
 function HeaderRightContent() {
   const {isAuthenticated , user} = useSelector((state)=> state.auth)
+  const {cartItems} = useSelector((state)=> state.shoppingCart)
+
+  const [openCartSheet , setOpenCartSheet] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
+  useEffect(()=>{
+    dispatch(fetchCartItems(user?.id))
+  },[dispatch])
+
   const  handleLogout = () => {
-    console.log("logout sucessfully")
+    // console.log("logout sucessfully")
     dispatch(logoutUser())
   }
 
   return <div className='flex lg:items-center lg:flex-row flex-col gap-4' >
-    <Button variant="outline" size="icon" >
+
+    <Sheet open={openCartSheet} onOpenChange={()=>setOpenCartSheet(false)}>
+    <Button variant="outline" size="icon" onClick={()=>setOpenCartSheet(true)} >
       <ShoppingCart className='w-6 h-6'/>
       <span className='sr-only'>
         User Cart
       </span>
     </Button>
+    <CartWrapper cartItems={cartItems && cartItems.items && cartItems.items.length> 0 ? cartItems.items : []} />
+    </Sheet>
     <DropdownMenu>
       <DropdownMenuTrigger  asChild>
           <Avatar className="bg-black" >

@@ -1,110 +1,136 @@
-import ProductFilter from '@/components/shoping-view/ProductFilter'
-import ShopingProductTile from '@/components/shoping-view/ShopingProductTile'
-import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { filterOptions, sortOptions } from '@/config'
-import { fetchAllFilteredProducts, fetchProductDetails } from '@/store/shop/productSlice'
-import { DropdownMenuRadioItem } from '@radix-ui/react-dropdown-menu'
-import { ArrowUpDown } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { createSearchParams, useSearchParams } from 'react-router-dom'
-import ProductDetailDialog from './ProductDetailDialog'
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createSearchParams, useSearchParams } from 'react-router-dom';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuRadioGroup, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { DropdownMenuRadioItem } from '@radix-ui/react-dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { ArrowUpDown } from 'lucide-react';
 
-// Helper function to create query string from filter params
+import ProductFilter from '@/components/shoping-view/ProductFilter';
+import ShopingProductTile from '@/components/shoping-view/ShopingProductTile';
+import ProductDetailDialog from './ProductDetailDialog';
+
+import { filterOptions, sortOptions } from '@/config';
+import { fetchAllFilteredProducts, fetchProductDetails } from '@/store/shop/productSlice';
+import { addToCart, fetchCartItems } from '@/store/cart-slice';
+import { useToast } from '@/hooks/use-toast';
+
+// Helper function to create query strings from filter parameters
 const createSearchParamsHelper = (filterParams) => {
   const queryParams = [];
-
   for (const [key, value] of Object.entries(filterParams)) {
     if (Array.isArray(value) && value.length > 0) {
-      const paramValue = value.join(',');
-      queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
+      queryParams.push(`${key}=${encodeURIComponent(value.join(','))}`);
     }
   }
   return queryParams.join('&');
-}
+};
 
 export default function ShopingListing() {
   const dispatch = useDispatch();
-  const { productList ,productDetails} = useSelector(state => state.shoppingProducts);
-  
+  const { productList, productDetails } = useSelector(state => state.shoppingProducts);
+  const {user} = useSelector(state => state.auth)
+  const {cartItems , isLoading} = useSelector(state => state.shoppingCart)
+  const {toast} = useToast()
+ 
   const [filter, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
 
 
-  const handleGetProductDetails = (getCurrentProduct)=>{
-    // console.log(getCurrentProduct)
-    dispatch(fetchProductDetails(getCurrentProduct))
+  // Fetch product details when a product is clicked
+  const handleGetProductDetails = (productId) => {
+    dispatch(fetchProductDetails(productId));
+  };
+
+
+  function handleAddCart(getCurrentProductId){
+    dispatch(addToCart({ userId : user?.id, productId : getCurrentProductId, quantity : 1 }))
+    .then((data)=> {
+      if(data?.payload?.success){
+        dispatch(fetchCartItems(user?.id))
+        toast({
+          title: data?.payload?.message,
+        })
+      }
+    } )
   }
 
-  
-  // Set initial filter values from sessionStorage
+  // Load initial filter values from sessionStorage
   useEffect(() => {
-    setFilters(JSON.parse(sessionStorage.getItem("filter")) || {});
+    const storedFilter = sessionStorage.getItem("filter");
+    if (storedFilter) {
+      setFilters(JSON.parse(storedFilter));
+    }
   }, []);
 
-  // Update query params in the URL when filter changes
+  // Update URL query params whenever the filter changes
   useEffect(() => {
     if (filter && Object.keys(filter).length > 0) {
-      const createQueryString = createSearchParamsHelper(filter);
-      setSearchParams(new URLSearchParams(createQueryString));
+      const queryString = createSearchParamsHelper(filter);
+      setSearchParams(new URLSearchParams(queryString));
     }
-  }, [filter, setSearchParams]); // Make sure to add `filter` as a dependency
+  }, [filter, setSearchParams]);
 
-  // Fetch products based on filters and sort
+  // Fetch filtered and sorted products
   useEffect(() => {
     const queryParams = createSearchParamsHelper(filter);
-  // console.log(queryParams)
+    dispatch(fetchAllFilteredProducts({ query: queryParams, sort }));
+  }, [filter, sort, dispatch]);
 
-    dispatch(fetchAllFilteredProducts({ query: queryParams, sort : sort }));
-  
-  }, [filter, sort, dispatch]); // Include `filter`, `sort`, and `dispatch` dependencies
-
-  // Handle sorting
+  // Update sort state when a sorting option is selected
   const handleSort = (value) => {
     setSort(value);
   };
-  // console.log(sort)
 
   // Handle filter changes
-  function handleFilter(getSectionId, getCurrentOption) {
+  const handleFilter = (sectionId, currentOption) => {
     setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
-      const currentOptions = updatedFilters[getSectionId] || [];
+      const currentOptions = updatedFilters[sectionId] || [];
 
-      if (currentOptions.includes(getCurrentOption)) {
-        const newOptions = currentOptions.filter(
-          (option) => option !== getCurrentOption
-        );
+      if (currentOptions.includes(currentOption)) {
+        const newOptions = currentOptions.filter(option => option !== currentOption);
         if (newOptions.length > 0) {
-          updatedFilters[getSectionId] = newOptions;
+          updatedFilters[sectionId] = newOptions;
         } else {
-          delete updatedFilters[getSectionId];
+          delete updatedFilters[sectionId];
         }
       } else {
-        updatedFilters[getSectionId] = [...currentOptions, getCurrentOption];
+        updatedFilters[sectionId] = [...currentOptions, currentOption];
       }
 
       return updatedFilters;
     });
-  }
+  };
 
-  const [openDetailDialog , setOpenDetailDialog] = useState(false);
-
-  useEffect(()=>{
-    if(productDetails !== null) setOpenDetailDialog(true)
-  } , [productDetails])
+  // Open product detail dialog when product details are available
+  useEffect(() => {
+    if (productDetails !== null) {
+      setOpenDetailDialog(true);
+    }
+  }, [productDetails]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-4 md:p-6">
+      {/* Filter Component */}
       <ProductFilter filter={filter} handleFilter={handleFilter} />
+
+      {/* Products Listing Section */}
       <div className="rounded-lg w-full shadow-sm">
         <div className="p-4 border-b flex flex-col items-center justify-between">
           <div className="flex items-center justify-around w-full">
             <h2 className="text-lg font-extrabold">All Products</h2>
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground">{productList.length} Products</span>
+
+              {/* Sort Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="flex items-center gap-1">
@@ -115,8 +141,12 @@ export default function ShopingListing() {
                 <DropdownMenuContent align="end" className="w-[100px]">
                   <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
                     {sortOptions.map((s) => (
-                      <DropdownMenuRadioItem className="cursor-pointer" value={s.id} key={s.id}>
-                        {s.label}s
+                      <DropdownMenuRadioItem 
+                        key={s.id} 
+                        value={s.id} 
+                        className="cursor-pointer"
+                      >
+                        {s.label}
                       </DropdownMenuRadioItem>
                     ))}
                   </DropdownMenuRadioGroup>
@@ -124,14 +154,30 @@ export default function ShopingListing() {
               </DropdownMenu>
             </div>
           </div>
+
+          {/* Product Tiles */}
           <div className="flex flex-wrap justify-center">
-            {productList && productList.length > 0
-              ? productList.map((p, i) => <ShopingProductTile key={i} handleGetProductDetails={handleGetProductDetails} product={p} />)
-              : null}
+            {productList.length > 0
+              ? productList.map((product, index) => (
+                  <ShopingProductTile
+                    key={index}
+                    handleGetProductDetails={handleGetProductDetails}
+                    product={product}
+                    handleAddCart={handleAddCart}
+                  />
+                ))
+              : <p>No products available.</p>}
           </div>
         </div>
       </div>
-      <ProductDetailDialog open={openDetailDialog} setOpen={setOpenDetailDialog} productDetails={productDetails} />
+
+      {/* Product Detail Dialog */}
+      <ProductDetailDialog 
+        open={openDetailDialog} 
+        setOpen={setOpenDetailDialog} 
+        productDetails={productDetails} 
+        handleAddCart={handleAddCart}
+      />
     </div>
   );
 }
