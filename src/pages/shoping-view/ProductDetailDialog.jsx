@@ -3,19 +3,26 @@ import { Button } from '@/components/ui/button'
 import { DialogContent ,Dialog ,DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
+import { setProductDetails } from '@/store/shop/productSlice'
 import { StarIcon } from 'lucide-react'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function ProductDetailDialog({open , setOpen , productDetails , handleAddCart}) {
   const {user} = useSelector(state => state.auth)
+  const dispatch = useDispatch()
 
-  console.log("productDetails" , productDetails?._id)
+  // console.log("productDetails" , productDetails?._id)
+
+  function handleDialogClose (){
+    setOpen(false)
+    dispatch(setProductDetails())
+  }
 
   return (
     <div className='w-auto h-screen  '>
 
-    <Dialog open={open} onOpenChange={setOpen} >
+    <Dialog open={open} onOpenChange={handleDialogClose} >
       <DialogTitle>
 
       </DialogTitle>

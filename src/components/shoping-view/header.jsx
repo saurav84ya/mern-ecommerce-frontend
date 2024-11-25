@@ -39,15 +39,19 @@ function HeaderRightContent() {
     dispatch(logoutUser())
   }
 
+
   return <div className='flex lg:items-center lg:flex-row flex-col gap-4' >
 
     <Sheet open={openCartSheet} onOpenChange={()=>setOpenCartSheet(false)}>
+      <div className='relative  w-[40px]  '>
     <Button variant="outline" size="icon" onClick={()=>setOpenCartSheet(true)} >
       <ShoppingCart className='w-6 h-6'/>
+      <span className='absolute top-1 right-1 ' >{cartItems?.items?.length > 0 ? cartItems?.items?.length : ""}</span>
       <span className='sr-only'>
         User Cart
       </span>
     </Button>
+    </div>
     <CartWrapper cartItems={cartItems && cartItems.items && cartItems.items.length> 0 ? cartItems.items : []} />
     </Sheet>
     <DropdownMenu>

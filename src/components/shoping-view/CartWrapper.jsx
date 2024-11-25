@@ -9,23 +9,31 @@ export default function CartWrapper({cartItems}) {
         currentItem?.salePrice > 0 ? currentItem?.salePrice : currentItem?.price
     )* currentItem?.quantity , 0 ) : 0 
   return (
-    <SheetContent className="sm:max-w-md  " >
+    <div>
+        <SheetContent className="sm:max-w-md  " >
         <SheetHeader>
             <SheetTitle>Your Cart</SheetTitle>
         </SheetHeader>
-        <div className='mt-8 space-y-4'>
-            {
-                cartItems && cartItems.length> 0 ? 
-                cartItems.map((item,i) => <CartItemsContent key={i} cartItems={item} />) : null
-            }
-        </div>
-       <div className=' absolute w-[90%] buttom-2 '>
-       <div className='mt-4 space-y-4 w-full flex justify-between  items-center'>
-            <span className='font-bold' >Total</span>
-            <span className='font-bold'  >${totalCartAmount}</span>
-        </div>
-        <Button className="w-full mt-3 " >Checkout</Button>
-       </div>
+        <div
+  className="mt-8 space-y-4 overflow-y-auto"
+  style={{ maxHeight: '80%' }}
+>
+  {cartItems && cartItems.length > 0 
+    ? cartItems.map((item, i) => <CartItemsContent key={i} cartItems={item} />) 
+    : null}
+</div>
+
+
+        <div className=' absolute w-[90%] buttom-2 '>
+    <div className='mt-4 space-y-4 w-full flex justify-between  items-center'>
+         <span className='font-bold' >Total</span>
+         <span className='font-bold'  >${totalCartAmount}</span>
+     </div>
+     <Button className="w-full mt-3 " >Checkout</Button>
+    </div>
+       
     </SheetContent>
+    
+    </div>
   )
 }
