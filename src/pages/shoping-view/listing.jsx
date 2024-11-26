@@ -91,6 +91,7 @@ export default function ShopingListing() {
 
   // Handle filter changes
   const handleFilter = (sectionId, currentOption) => {
+    sessionStorage.removeItem('filter')
     setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
       const currentOptions = updatedFilters[sectionId] || [];
@@ -118,7 +119,7 @@ export default function ShopingListing() {
   }, [productDetails]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-4 md:p-6">
+    <div className="grid grid-cols-1 md:grid-cols-[300px_1fr]   gap-6 p-4 md:p-6">
       {/* Filter Component */}
       <ProductFilter filter={filter} handleFilter={handleFilter} />
 

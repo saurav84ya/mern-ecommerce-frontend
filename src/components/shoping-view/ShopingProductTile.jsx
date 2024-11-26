@@ -4,7 +4,7 @@ import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import { brandOptionsMap, categoryOptionsMap } from '@/config'
 
-export default function ShopingProductTile({product,handleGetProductDetails , handleAddCart}) {
+export default function ShopingProductTile({product,handleGetProductDetails ,btn , handleAddCart}) {
   return (
     <div className='w-auto'>
         <Card className="w-[300px] m-4   ">
@@ -31,7 +31,10 @@ export default function ShopingProductTile({product,handleGetProductDetails , ha
             
         </div>
         <CardFooter >
-                <Button className="w-full" onClick={()=> handleAddCart(product?._id)} >Add to Cart</Button>
+            {
+               
+                btn ? null:  <Button className="w-full" onClick={()=> handleAddCart(product?._id)} >Add to Cart</Button>
+            }
             </CardFooter>
     </Card>
     </div>

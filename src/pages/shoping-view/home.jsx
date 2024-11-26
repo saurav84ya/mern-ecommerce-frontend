@@ -19,9 +19,12 @@ import {
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllFilteredProducts } from '@/store/shop/productSlice';
+import { fetchAllFilteredProducts, fetchProductDetails } from '@/store/shop/productSlice';
 import ShopingProductTile from '@/components/shoping-view/ShopingProductTile';
 import { useNavigate } from 'react-router-dom';
+import ProductDetailDialog from './ProductDetailDialog';
+import { addToCart, fetchCartItems } from '@/store/cart-slice';
+import { useToast } from '@/hooks/use-toast';
 
 const categoriesWithIcon = [
   { id: 'men', label: 'Men', icon: ShirtIcon },
@@ -45,7 +48,9 @@ export default function ShopingHome() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { productList } = useSelector((state) => state.shoppingProducts);
+  const { productList , productDetails } = useSelector((state) => state.shoppingProducts);
+  const { user } = useSelector((state) => state.auth);
+
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -66,7 +71,31 @@ export default function ShopingHome() {
     sessionStorage.setItem('filter', JSON.stringify(currentFilter));
     navigate('/shop/listing');
   }
+  const {toast} = useToast()
+  function handleAddCart(getCurrentProductId){
+    // console.log("getCurrentProductId" , getCurrentProductId , user.id)
+    dispatch(addToCart({ userId : user?.id, productId : getCurrentProductId, quantity : 1 }))
+    .then((data)=> {
+      if(data?.payload?.success){
+        dispatch(fetchCartItems(user?.id))
+        toast({
+          title: data?.payload?.message,
+        })
+      }
+    } )
+  }
+  const handleGetProductDetails = (productId) => {
+    dispatch(fetchProductDetails(productId));
+  };
 
+  const [openDetailDialog ,setOpenDetailDialog ] = useState(false)
+
+  useEffect(() => {
+    if (productDetails !== null) {
+      setOpenDetailDialog(true);
+    }
+  }, [productDetails]);
+  
   return (
     <div className="flex flex-col min-h-screen">
       {/* Banner Section */}
@@ -151,7 +180,7 @@ export default function ShopingHome() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {productList && productList.length > 0 ? (
               productList.map((productItem) => (
-                <ShopingProductTile product={productItem} key={productItem._id} />
+                <ShopingProductTile product={productItem} handleGetProductDetails={handleGetProductDetails} btn={true}  key={productItem._id} />
               ))
             ) : (
               <p className="text-center col-span-full">No products found!</p>
@@ -159,6 +188,12 @@ export default function ShopingHome() {
           </div>
         </div>
       </section>
+      <ProductDetailDialog 
+        open={openDetailDialog} 
+        setOpen={setOpenDetailDialog} 
+        productDetails={productDetails} 
+        handleAddCart={handleAddCart}
+      />
     </div>
   );
 }

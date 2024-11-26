@@ -13,11 +13,25 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden'; //
 import { logoutUser } from '@/store/auth-slice'
 import CartWrapper from './CartWrapper'
 import { fetchCartItems } from '@/store/cart-slice'
+import { Label } from '../ui/label'
 
 function MenuItems (){
+
+  const navigate = useNavigate()
+
+  function handlenavigate (x){
+    sessionStorage.removeItem('filter')
+    const currentFilter = x.id !== 'home' ?  {
+      category : [x.id]
+    } : null
+
+    sessionStorage.setItem('filter',JSON.stringify(currentFilter))
+    navigate(x.path)
+  }
+
   return <div className=' flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row '>
     {
-      shoppingViewHeaderMenuItems.map(m => <Link className='text-sm font-medium' key={m.id} to={m.path} >{m.label}</Link>)
+      shoppingViewHeaderMenuItems.map(m => <Label onClick={()=>handlenavigate(m)} className='text-sm font-medium' key={m.id} >{m.label}</Label>)
     }
   </div>
 }
@@ -46,7 +60,7 @@ function HeaderRightContent() {
       <div className='relative  w-[40px]  '>
     <Button variant="outline" size="icon" onClick={()=>setOpenCartSheet(true)} >
       <ShoppingCart className='w-6 h-6'/>
-      <span className='absolute top-1 right-1 ' >{cartItems?.items?.length > 0 ? cartItems?.items?.length : ""}</span>
+      <span className='absolute top-[-10px] right-[-10px] bg-black text-white rounded-lg p-1 ' >{cartItems?.items?.length > 0 ? cartItems?.items?.length : "0"}</span>
       <span className='sr-only'>
         User Cart
       </span>

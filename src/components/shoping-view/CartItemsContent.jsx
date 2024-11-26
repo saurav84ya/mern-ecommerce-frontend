@@ -26,7 +26,7 @@ export default function CartItemsContent({cartItems}) {
                 quantity : typeOfAction === 'plus' ? getCartItem.quantity + 1 : getCartItem.quantity -1
                     
             })).then(data => {
-                console.log(data)
+                // console.log(data)
                 if(data?.payload?.success){
                     toast({
                         title: data?.payload?.message,

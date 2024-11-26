@@ -5,6 +5,8 @@ import { Checkbox } from '../ui/checkbox'
 import { Separator } from '../ui/separator'
 
 export default function ProductFilter({handleFilter , filter}) {
+  const selected = sessionStorage.getItem('filter')
+  console.log(selected)
   return (
     <div className='bg-background rounded-lg flex  sm:flex-col    shadow-sm'>
       <div className='p-4 border-b '>

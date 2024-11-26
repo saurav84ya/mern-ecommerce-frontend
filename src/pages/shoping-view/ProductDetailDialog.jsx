@@ -20,7 +20,7 @@ export default function ProductDetailDialog({open , setOpen , productDetails , h
   }
 
   return (
-    <div className='w-auto h-screen  '>
+    <div className='w-auto   '>
 
     <Dialog open={open} onOpenChange={handleDialogClose} >
       <DialogTitle>
