@@ -66,7 +66,7 @@ function HeaderRightContent() {
       </span>
     </Button>
     </div>
-    <CartWrapper cartItems={cartItems && cartItems.items && cartItems.items.length> 0 ? cartItems.items : []} />
+    <CartWrapper setOpenCartSheet={setOpenCartSheet} cartItems={cartItems && cartItems.items && cartItems.items.length> 0 ? cartItems.items : []} />
     </Sheet>
     <DropdownMenu>
       <DropdownMenuTrigger  asChild>

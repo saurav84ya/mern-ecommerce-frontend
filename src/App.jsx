@@ -60,7 +60,7 @@ export default function App() {
         <Route path='/shop' element={<CheckAuth isAuthenticated={isAuthenticated} user={user} ><ShopingLayout/></CheckAuth>} >
           <Route path='home' element={<ShopingHome/>} />
           <Route path='listing' element={<ShopingListing/>} />
-          <Route path='cheakout' element={<ShoipngCheakout/>} />
+          <Route path='checkout' element={<ShoipngCheakout/>} />
           <Route path='account' element={<ShopingAccount/>} />
         </Route>
 

@@ -7,6 +7,7 @@ import { addNewAddress, deleteAddress, editaAddress, fetchAllAddresses } from '@
 import { useToast } from '@/hooks/use-toast'
 import AddressCard from './AddressCard'
 import { Button } from '../ui/button'
+import axios from 'axios'
 
 
 const initialAddressFormData = {
@@ -17,12 +18,13 @@ const initialAddressFormData = {
     notes : ''
 
 }
-export default function UserAddressDiv() {
+export default function UserAddressDiv({setCurrentSelectedId,selectedId}) {
     const {toast} = useToast()
     const dispatch = useDispatch()
     const {user} = useSelector(state => state.auth)
-    const [currentSelectedAddress,setCurrentSelectedAddress] = useState(null)
     const {addressList} = useSelector(state => state.shopAddress)
+    const {cartItems} = useSelector(state => state.shoppingCart)
+
     // console.log(addressList)
     const [currentEditedId,setCurrentEditedId] = useState(null)
 
@@ -95,13 +97,18 @@ export default function UserAddressDiv() {
         });
       }
 
+      
+
+
   return (
     <Card>
-        <div className='mb-5 p-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2' >
+        <div className='mb-5 p-3 grid grid-cols-1 sm:grid-cols-2 gap-2' >
             {
                 addressList && addressList.length > 0 ? 
                 addressList.map(add =>  <AddressCard 
                     handleEditAddress ={handleEditAddress}
+                    setCurrentSelectedId={setCurrentSelectedId}
+                    selectedId={selectedId}
                                             handleDeleteAddress={handleDeleteAddress} 
                                             key={add._id}
                                             addressInfo={add} /> ) : null

@@ -2,8 +2,10 @@ import React from 'react'
 import { SheetContent, SheetHeader, SheetTitle } from '../ui/sheet'
 import CartItemsContent from './CartItemsContent'
 import { Button } from '../ui/button'
+import { useNavigate } from 'react-router-dom'
 
-export default function CartWrapper({cartItems}) {
+export default function CartWrapper({cartItems,setOpenCartSheet}) {
+  const navigate = useNavigate()
     const totalCartAmount = cartItems && cartItems.length>0 ?
     cartItems.reduce((sum,currentItem) => sum + (
         currentItem?.salePrice > 0 ? currentItem?.salePrice : currentItem?.price
@@ -29,7 +31,7 @@ export default function CartWrapper({cartItems}) {
          <span className='font-bold' >Total</span>
          <span className='font-bold'  >${totalCartAmount}</span>
      </div>
-     <Button className="w-full mt-3 " >Checkout</Button>
+     <Button onClick={()=> {navigate('/shop/checkout') , setOpenCartSheet(false)}} className="w-full mt-3 " >Checkout</Button>
     </div>
        
     </SheetContent>
