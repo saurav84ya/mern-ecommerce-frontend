@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react' 
 import { Route, Routes } from 'react-router-dom'
 import AuthLayout from './components/auth/layout'
-import Login from './pages/auth/login'
-import Register from './pages/auth/register'
+import Login from './pages/auth/Login'
+import Register from './pages/auth/Register'
 import AdminLayout from './components/admin-view/layout'
 import AdminDashboard from './pages/admin-view/dashboard'
-import AdminProducts from './pages/admin-view/products'
+// import AdminProducts from './pages/admin-view/products'
 import AdminOrders from './pages/admin-view/orders'
 import AdminFeatures from './pages/admin-view/features'
 import ShopingLayout from './components/shoping-view/layout'
@@ -19,10 +19,9 @@ import UnAuthPage from './components/UnAuthPage'
 import { useDispatch, useSelector } from 'react-redux'
 import { checkAuth } from './store/auth-slice'
 import AllUploadedProducts from './pages/admin-view/AllUploadedProducts'
-import { AlarmCheck } from 'lucide-react'
+// import { AlarmCheck } from 'lucide-react'
 import AllRegisterUsers from './pages/admin-view/AllRegisterUsers'
 import LocalPage from './components/LocalPage'
-
 
 
 export default function App() {
