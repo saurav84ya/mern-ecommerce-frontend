@@ -1,19 +1,16 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function NoPage() {
+  // const navigate = useNavigate();
 
-  function redirect (){
-    window.location.href = "/auth/login";
-  }
-
-  useEffect(()=>{
-    redirect();
-  },[])
+  // useEffect(() => {
+  //   navigate("/auth/login"); // React Router redirect
+  // }, [navigate]);
 
   return (
-
     <div>
-      did not founde rhe page
+      Did not find the page.
     </div>
-  )
+  );
 }
