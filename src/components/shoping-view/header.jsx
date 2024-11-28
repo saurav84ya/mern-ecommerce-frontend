@@ -54,7 +54,7 @@ function HeaderRightContent() {
   }
 
 
-  return <div className='flex lg:items-center lg:flex-row flex-col gap-4' >
+  return <div className='  flex lg:items-center lg:flex-row flex-col gap-4' >
 
     <Sheet open={openCartSheet} onOpenChange={()=>setOpenCartSheet(false)}>
       <div className='relative  w-[40px]  '>
@@ -70,16 +70,14 @@ function HeaderRightContent() {
     </Sheet>
     <DropdownMenu>
       <DropdownMenuTrigger  asChild>
-          <Avatar className="bg-black" >
+          <Avatar className="bg-black cursor-pointer " >
             <AvatarFallback className="bg-black text-white font-extrabold">
               {user?.userName[0].toUpperCase()  }
             </AvatarFallback>
           </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="right" className="w-56" >
-        <DropdownMenuLabel>
-              Logout
-        </DropdownMenuLabel>
+
         <DropdownMenuSeparator/>
         <DropdownMenuItem  onClick={()=> navigate('/shop/account')} >
         <User className='mr-2 h-4 w-4' />
@@ -99,7 +97,7 @@ export default function ShoppingViewHeader() {
   const {isAuthenticated , user} = useSelector((state)=> state.auth)
   
   return (
-    <div  className='sticky top-0 z-40 w-full border-b bg-background    ' >
+    <div  className='fixed top-0 z-40 w-full border-b bg-white   ' >
       <div className='flex h-16 items-center justify-between px-4 md:px-6' >
           <Link to="/shop/home" className='flex items-center gap-2' > 
           <House className='h-6 w-6' />

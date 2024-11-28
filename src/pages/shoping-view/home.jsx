@@ -99,14 +99,14 @@ export default function ShopingHome() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Banner Section */}
-      <div className="relative w-full h-[600px] overflow-hidden">
+      <div className="relative w-full h-[50vw] md:h-[600px] mt-3 overflow-hidden">
         {slides.map((slide, index) => (
           <img
             src={slide}
             key={index}
             className={`${
               index === currentSlide ? 'opacity-100' : 'opacity-0'
-            } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
+            } absolute top-[40px] left-0 w-full md:h-full md:object-cover transition-opacity duration-1000`}
           />
         ))}
         <Button

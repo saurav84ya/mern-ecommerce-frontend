@@ -39,9 +39,7 @@ export default function App() {
 
   return (
     <div>
-      <div className='flex flex-col overflow-hidden bg-white'>
-        <h1>Header component from App.jsx</h1>
-      </div>
+
       <Routes>
 
         <Route path='/auth' element={<CheckAuth isAuthenticated={isAuthenticated} user={user} ><AuthLayout/></CheckAuth>} >
