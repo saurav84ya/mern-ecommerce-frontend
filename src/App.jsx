@@ -21,6 +21,7 @@ import { checkAuth } from './store/auth-slice'
 import AllUploadedProducts from './pages/admin-view/AllUploadedProducts'
 import { AlarmCheck } from 'lucide-react'
 import AllRegisterUsers from './pages/admin-view/AllRegisterUsers'
+import LocalPage from './components/LocalPage'
 
 
 
@@ -41,6 +42,8 @@ export default function App() {
     <div>
 
       <Routes>
+
+
 
         <Route path='/auth' element={<CheckAuth isAuthenticated={isAuthenticated} user={user} ><AuthLayout/></CheckAuth>} >
             <Route path='login' element={<Login/>} />

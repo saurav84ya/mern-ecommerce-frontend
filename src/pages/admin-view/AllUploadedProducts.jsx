@@ -123,22 +123,22 @@ export default function AllUploadedProducts() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4  w-full ">
       <h2 className="mb-4 text-xl font-bold">All Uploaded Products</h2>
 
       {loading && <p>Loading products...</p>}
       {error && <p className="text-red-500">{error}</p>}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className=" flex flex-wrap justify-center gap-4">
         {products.map((product) => (
           <div
             key={product._id}
-            className="relative border p-4 rounded"
+            className="relative border w-[300px] p-4 rounded"
           >
             <img
               src={product.image}
               alt={product.title}
-              className="w-full h-40 rounded mb-2"
+              className="w-auto h-40 rounded mb-2"
             />
             <p>ID: {product._id}</p>
             <p>Name: {product.title}</p>
