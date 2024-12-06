@@ -20,6 +20,7 @@ import { checkAuth } from "./store/auth-slice";
 import AllUploadedProducts from "./pages/admin-view/AllUploadedProducts";
 import AllRegisterUsers from "./pages/admin-view/AllRegisterUsers";
 import { Skeleton } from "./components/ui/skeleton";
+import Search from "./pages/shoping-view/Search";
 
 export default function App() {
   const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
@@ -71,6 +72,7 @@ export default function App() {
           <Route path="listing" element={<ShopingListing />} />
           <Route path="checkout" element={<ShoipngCheakout />} />
           <Route path="account" element={<ShopingAccount />} />
+          <Route path="search" element={<Search />} />
         </Route>
 
         {/* Handle 404 - No Page */}
