@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { registerUser ,loginUser } from '../../store/auth-slice/index'
 import { useDispatch, useSelector } from 'react-redux'
 import { useToast } from '@/hooks/use-toast'
+import { Skeleton } from '@/components/ui/skeleton'
 
 
 
@@ -13,8 +14,6 @@ const initialState = {
   password : ""
 }//
 export default function Login() {
- 
-
 
   const {toast} = useToast()
 
@@ -54,6 +53,7 @@ export default function Login() {
         <p className='mt-2 text-center'>Don't have an account?
           <Link className='font-medium ml-2 text-primary hover:underline' to="/auth/register" >Sign Up </Link>
         </p>
+        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
     </div>
   )
 }

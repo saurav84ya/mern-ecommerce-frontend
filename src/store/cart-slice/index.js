@@ -17,7 +17,7 @@ export const addToCart = createAsyncThunk(
         quantity,
       }
     );
-
+    console.log(response.data)
     return response.data;
   }
 );
@@ -28,7 +28,7 @@ export const fetchCartItems = createAsyncThunk(
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL_SERVER}api/user/cart/getCart/${userId}`,
     );
-
+    console.log(response.data)
     return response.data;
   }
 );

@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import ProductDetailDialog from './ProductDetailDialog';
 import { addToCart, fetchCartItems } from '@/store/cart-slice';
 import { useToast } from '@/hooks/use-toast';
+import { fetchUserPurchases } from '@/store/purchesedProductChque';
 
 const categoriesWithIcon = [
   { id: 'men', label: 'Men', icon: ShirtIcon },
@@ -61,6 +62,7 @@ export default function ShopingHome() {
 
   useEffect(() => {
     dispatch(fetchAllFilteredProducts({ query: {}, sort: 'price-lowtohigh' }));
+    dispatch(fetchUserPurchases(user?.id))
   }, [dispatch]);
 
   function handleNavigateToListingPage(getCurrentItem, section) {
