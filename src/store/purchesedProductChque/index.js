@@ -7,7 +7,7 @@ export const fetchUserPurchases = createAsyncThunk(
   async (userId) => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URL_SERVER}fetchUserPurchaseProducts/${userId}`);
-      console.log(response)
+      // console.log(response)
       return response.data.purchases;
     } catch (error) {
       return console.log(error);
@@ -19,12 +19,12 @@ export const postReviewText = createAsyncThunk(
     "userPurchases/postReviewText",
     async (review) => {
       try {
-        console.log("review",review)
+        // console.log("review",review)
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL_SERVER}api/reviews/postreviewstext`,
           review // Send the review object
         );
-        console.log("Response from server:", response.data);
+        // console.log("Response from server:", response.data);
         return response.data;
       } catch (error) {
         console.error("Error sending review:", error);

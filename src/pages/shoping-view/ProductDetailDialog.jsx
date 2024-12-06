@@ -1,24 +1,29 @@
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { DialogContent ,Dialog ,DialogTitle } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Separator } from '@/components/ui/separator'
-import { useToast } from '@/hooks/use-toast'
-import { postReviewText } from '@/store/purchesedProductChque'
-import { setProductDetails } from '@/store/shop/productSlice'
-import { StarIcon } from 'lucide-react'
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { DialogContent, Dialog, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import { postReviewText } from "@/store/purchesedProductChque";
+import { setProductDetails } from "@/store/shop/productSlice";
+import { StarIcon } from "lucide-react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-
-
-export default function ProductDetailDialog({ open, setOpen, productDetails, handleAddCart }) {
+export default function ProductDetailDialog({
+  open,
+  setOpen,
+  productDetails,
+  handleAddCart,
+}) {
   const { user } = useSelector((state) => state.auth);
   const { purchases } = useSelector((state) => state.userPurchases);
   const dispatch = useDispatch();
-  const {toast} = useToast()
+  const { toast } = useToast();
 
-  const [reviewText, setReviewText] = useState('');
+  const [reviewText, setReviewText] = useState("");
+
+  // console.log("productDetails", productDetails);
 
   function handleDialogClose() {
     setOpen(false);
@@ -29,9 +34,9 @@ export default function ProductDetailDialog({ open, setOpen, productDetails, han
     if (reviewText.length < 3) {
       // alert('Review is too short!');
       toast({
-        title:"Review is too short!" ,
-        variant : 'destructive'
-      })
+        title: "Review is too short!",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -40,29 +45,34 @@ export default function ProductDetailDialog({ open, setOpen, productDetails, han
     );
 
     if (isPurchased) {
-      console.log('Comment added');
+      // console.log("Comment added");
       const review = {
         productId: productDetails?._id,
         userId: user?.id,
-        userName : user?.userName,
-        reviewText : reviewText
-      }
+        userName: user?.userName,
+        reviewText: reviewText,
+      };
       // console.log("review",review)
       dispatch(postReviewText(review));
       // console.log("productDetails._id, reviewText" , productDetails._id, reviewText)
-      setReviewText(''); // Clear the input field after submission
+      setReviewText(""); // Clear the input field after submission
       toast({
-        title:"review Added" ,
-      })
+        title: "review Added",
+      });
     } else {
-      console.log('You are not purchased this product');
+      // console.log("You are not purchased this product");
       toast({
-        title:"You are not purchased this product" ,
-        variant : 'destructive'
-      })
-      setReviewText(''); 
+        title: "You are not purchased this product",
+        variant: "destructive",
+      });
+      setReviewText("");
     }
   }
+
+  // const name = name 
+
+  // console.log("console name 1st latter with Uppercse ")
+
 
   return (
     <div className="w-auto">
@@ -80,13 +90,17 @@ export default function ProductDetailDialog({ open, setOpen, productDetails, han
           </div>
           <div>
             <div>
-              <h1 className="text-3xl font-extrabold">{productDetails?.title}</h1>
-              <p className="text-muted-foreground">{productDetails?.description}</p>
+              <h1 className="text-3xl font-extrabold">
+                {productDetails?.title}
+              </h1>
+              <p className="text-muted-foreground">
+                {productDetails?.description}
+              </p>
             </div>
             <div className="flex items-center justify-between">
               <p
                 className={`text-3xl font-bold text-primary ${
-                  productDetails?.salePrice > 0 ? 'line-through ' : ''
+                  productDetails?.salePrice > 0 ? "line-through " : ""
                 }`}
               >
                 ${productDetails?.price}
@@ -106,17 +120,47 @@ export default function ProductDetailDialog({ open, setOpen, productDetails, han
               <span className="text-muted-foreground">(4.5)</span>
             </div>
             <div className="mt-5 mb-5">
-              <Button onClick={() => handleAddCart(productDetails?._id)} className="w-full">
+              <Button
+                onClick={() => handleAddCart(productDetails?._id)}
+                className="w-full"
+              >
                 Add to cart
               </Button>
             </div>
             <Separator />
             <div className="overflow-auto">
               <h2 className="text-xl font-bold mb-4 w-full">Reviews</h2>
-              <div className="grid gap-6 overflow-y-auto w-full max-h-64">
-                {/* Review List */}
-                {/* ... */}
+              <div className="grid gap-1 overflow-y-auto w-full max-h-64">
+                {productDetails?.reviews?.map((x, i) => {
+                  return (
+                    <div
+                      key={i}
+                      className="flex gap-6"
+                    >
+                      <Avatar className="w-10- h-10" >
+                        <AvatarFallback>{ x.userName.charAt(0).toUpperCase() + name.slice(1)}</AvatarFallback>
+                      </Avatar>
+                      <div className="grid gap-1" >
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-bold" >{
+                              user.id === x.userId ? "You" : x.userName
+                            }</h3>
+                        </div>
+                        <div className="flex items-center gap-0.5" >
+                          <StarIcon className="w-5 h-5 fill-primary"  />
+                          <StarIcon className="w-5 h-5 fill-primary"  />
+                          <StarIcon className="w-5 h-5 fill-primary"  />
+                          <StarIcon className="w-5 h-5 fill-primary"  />
+                          <StarIcon className="w-5 h-5 fill-primary"  />
+                        </div>
+                        <p className="text-muted-foreground">{x.reviewText}</p>
+                      </div>
+                    
+                    </div>
+                  );
+                })} 
               </div>
+
               <div className="mt-6 flex gap-2 pb-1 pl-1">
                 <Input
                   className=""

@@ -47,7 +47,7 @@ export const logoutUser = createAsyncThunk("/auth/logout", async () => {
       withCredentials: true, // Include credentials for cross-origin
     }
   );
-  console.log(response.data);
+  // console.log(response.data);
   return response.data;
 });
 
