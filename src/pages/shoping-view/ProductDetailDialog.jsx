@@ -1,3 +1,4 @@
+import Star from "@/components/Star";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DialogContent, Dialog, DialogTitle } from "@/components/ui/dialog";
@@ -6,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { postReviewText } from "@/store/purchesedProductChque";
 import { setProductDetails } from "@/store/shop/productSlice";
-import { StarIcon } from "lucide-react";
+import { StarHalf, StarHalfIcon, StarIcon, Stars } from "lucide-react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -22,8 +23,9 @@ export default function ProductDetailDialog({
   const { toast } = useToast();
 
   const [reviewText, setReviewText] = useState("");
+  const [stars, setStars] = useState(1);
 
-  // console.log("productDetails", productDetails);
+  // console.log("productDetails", productDetails?.averageReview);
 
   function handleDialogClose() {
     setOpen(false);
@@ -51,6 +53,7 @@ export default function ProductDetailDialog({
         userId: user?.id,
         userName: user?.userName,
         reviewText: reviewText,
+        rating: stars,
       };
       // console.log("review",review)
       dispatch(postReviewText(review));
@@ -69,10 +72,9 @@ export default function ProductDetailDialog({
     }
   }
 
-  // const name = name 
+  // const name = name
 
   // console.log("console name 1st latter with Uppercse ")
-
 
   return (
     <div className="w-auto">
@@ -112,13 +114,21 @@ export default function ProductDetailDialog({
               ) : null}
             </div>
             <div className="flex items-center gap-0.5 mt-2">
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <span className="text-muted-foreground">(4.5)</span>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <StarIcon
+                  key={index}
+                  className={`w-5 h-5 ${
+                    index < Math.floor(productDetails?.averageReview || 0)
+                      ? "fill-primary" // Filled star
+                      : "fill-muted" // Empty star
+                  }`}
+                />
+              ))}
+              <span className="text-muted-foreground ml-2">
+                {`(${productDetails?.averageReview })`|| "No rating"}
+              </span>
             </div>
+
             <div className="mt-5 mb-5">
               <Button
                 onClick={() => handleAddCart(productDetails?._id)}
@@ -133,42 +143,47 @@ export default function ProductDetailDialog({
               <div className="grid gap-1 overflow-y-auto w-full max-h-64">
                 {productDetails?.reviews?.map((x, i) => {
                   return (
-                    <div
-                      key={i}
-                      className="flex gap-6"
-                    >
-                      <Avatar className="w-10- h-10" >
-                        <AvatarFallback>{ x.userName.charAt(0).toUpperCase() + name.slice(1)}</AvatarFallback>
+                    <div key={i} className="flex gap-6">
+                      <Avatar className="w-10- h-10">
+                        <AvatarFallback>
+                          {x.userName.charAt(0).toUpperCase() + name.slice(1)}
+                        </AvatarFallback>
                       </Avatar>
-                      <div className="grid gap-1" >
+                      <div className="grid gap-1">
                         <div className="flex items-center gap-2">
-                          <h3 className="font-bold" >{
-                              user.id === x.userId ? "You" : x.userName
-                            }</h3>
+                          <h3 className="font-bold">
+                            {user.id === x.userId ? "You" : x.userName}
+                          </h3>
                         </div>
-                        <div className="flex items-center gap-0.5" >
-                          <StarIcon className="w-5 h-5 fill-primary"  />
-                          <StarIcon className="w-5 h-5 fill-primary"  />
-                          <StarIcon className="w-5 h-5 fill-primary"  />
-                          <StarIcon className="w-5 h-5 fill-primary"  />
-                          <StarIcon className="w-5 h-5 fill-primary"  />
+                        <div className="flex items-center gap-0.5">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <StarIcon
+                              key={index}
+                              className={`w-5 h-5 ${
+                                index < x.rating
+                                  ? "fill-primary"
+                                  : "fill-gray-300"
+                              }`}
+                            />
+                          ))}
                         </div>
                         <p className="text-muted-foreground">{x.reviewText}</p>
                       </div>
-                    
                     </div>
                   );
-                })} 
+                })}
               </div>
-
-              <div className="mt-6 flex gap-2 pb-1 pl-1">
-                <Input
-                  className=""
-                  placeholder="Write a review..."
-                  value={reviewText}
-                  onChange={(e) => setReviewText(e.target.value)}
-                />
-                <Button onClick={sendReview}>Submit</Button>
+              <div className="mt-6 flex flex-col  gap-2 pb-1 pl-1">
+                <Star setStars={setStars} />
+                <div className="flex">
+                  <Input
+                    className=""
+                    placeholder="Write a review..."
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value)}
+                  />
+                  <Button onClick={sendReview}>Submit</Button>
+                </div>
               </div>
             </div>
           </div>
